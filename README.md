@@ -2,7 +2,7 @@
 
 A lightweight React library for managing ARIA live regions for reliable screen reader notifications.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm](https://img.shields.io/npm/v/a11y-live-announcer.svg)](https://www.npmjs.com/package/a11y-live-announcer) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Why Use This?
 
