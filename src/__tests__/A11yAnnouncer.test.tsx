@@ -2,17 +2,17 @@ import React, { useEffect } from "react";
 import { render, screen, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
-  A11yAnnouncerProvider,
-  useA11yAnnouncer,
-  A11yAnnouncerMessage,
-  A11yAnnouncerMessenger,
+  LiveAnnouncerProvider,
+  useLiveAnnouncer,
+  LiveAnnouncerMessage,
+  LiveAnnouncerMessenger,
 } from "../index";
 
 const TestButton: React.FC<{ message: string; priority?: "polite" | "assertive" }> = ({
   message,
   priority = "polite",
 }) => {
-  const { announce } = useA11yAnnouncer();
+  const { announce } = useLiveAnnouncer();
   return (
     <button onClick={() => announce(message, { priority })}>
       Announce
@@ -24,7 +24,7 @@ const TestPoliteButton: React.FC<{ message: string; id?: string }> = ({
   message,
   id,
 }) => {
-  const { announcePolite } = useA11yAnnouncer();
+  const { announcePolite } = useLiveAnnouncer();
   return (
     <button onClick={() => announcePolite(message, id)}>
       Announce Polite
@@ -36,7 +36,7 @@ const TestAssertiveButton: React.FC<{ message: string; id?: string }> = ({
   message,
   id,
 }) => {
-  const { announceAssertive } = useA11yAnnouncer();
+  const { announceAssertive } = useLiveAnnouncer();
   return (
     <button onClick={() => announceAssertive(message, id)}>
       Announce Assertive
@@ -45,16 +45,16 @@ const TestAssertiveButton: React.FC<{ message: string; id?: string }> = ({
 };
 
 const TestClearButton: React.FC = () => {
-  const { clearAnnouncements } = useA11yAnnouncer();
+  const { clearAnnouncements } = useLiveAnnouncer();
   return <button onClick={clearAnnouncements}>Clear</button>;
 };
 
-describe("A11yAnnouncerProvider", () => {
+describe("LiveAnnouncerProvider", () => {
   it("renders children correctly", () => {
     render(
-      <A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
         <div>Test Content</div>
-      </A11yAnnouncerProvider>
+      </LiveAnnouncerProvider>
     );
 
     expect(screen.getByText("Test Content")).toBeInTheDocument();
@@ -62,30 +62,30 @@ describe("A11yAnnouncerProvider", () => {
 
   it("renders all four live regions (double announcer pattern)", () => {
     render(
-      <A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
         <div>Test</div>
-      </A11yAnnouncerProvider>
+      </LiveAnnouncerProvider>
     );
 
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toBeInTheDocument();
-    expect(screen.getByTestId("A11yAnnouncer-polite-2")).toBeInTheDocument();
-    expect(screen.getByTestId("A11yAnnouncer-assertive-1")).toBeInTheDocument();
-    expect(screen.getByTestId("A11yAnnouncer-assertive-2")).toBeInTheDocument();
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toBeInTheDocument();
+    expect(screen.getByTestId("LiveAnnouncer-polite-2")).toBeInTheDocument();
+    expect(screen.getByTestId("LiveAnnouncer-assertive-1")).toBeInTheDocument();
+    expect(screen.getByTestId("LiveAnnouncer-assertive-2")).toBeInTheDocument();
   });
 
   it("has correct ARIA attributes on live regions", () => {
     render(
-      <A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
         <div>Test</div>
-      </A11yAnnouncerProvider>
+      </LiveAnnouncerProvider>
     );
 
-    const polite1 = screen.getByTestId("A11yAnnouncer-polite-1");
+    const polite1 = screen.getByTestId("LiveAnnouncer-polite-1");
     expect(polite1).toHaveAttribute("aria-live", "polite");
     expect(polite1).toHaveAttribute("aria-atomic", "true");
     expect(polite1).toHaveAttribute("role", "status");
 
-    const assertive1 = screen.getByTestId("A11yAnnouncer-assertive-1");
+    const assertive1 = screen.getByTestId("LiveAnnouncer-assertive-1");
     expect(assertive1).toHaveAttribute("aria-live", "assertive");
     expect(assertive1).toHaveAttribute("aria-atomic", "true");
     expect(assertive1).toHaveAttribute("role", "alert");
@@ -93,29 +93,29 @@ describe("A11yAnnouncerProvider", () => {
 
   it("live regions are visually hidden", () => {
     render(
-      <A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
         <div>Test</div>
-      </A11yAnnouncerProvider>
+      </LiveAnnouncerProvider>
     );
 
-    const container = screen.getByTestId("A11yAnnouncer-container");
+    const container = screen.getByTestId("LiveAnnouncer-container");
     expect(container).toHaveStyle({ position: "absolute" });
     expect(container).toHaveStyle({ width: "1px" });
     expect(container).toHaveStyle({ height: "1px" });
   });
 });
 
-describe("useA11yAnnouncer", () => {
+describe("useLiveAnnouncer", () => {
   it("throws error when used outside provider", () => {
     const consoleError = jest.spyOn(console, "error").mockImplementation(() => {});
 
     const BadComponent = () => {
-      useA11yAnnouncer();
+      useLiveAnnouncer();
       return null;
     };
 
     expect(() => render(<BadComponent />)).toThrow(
-      "useA11yAnnouncer must be used within an A11yAnnouncerProvider"
+      "useLiveAnnouncer must be used within a LiveAnnouncerProvider"
     );
 
     consoleError.mockRestore();
@@ -125,14 +125,14 @@ describe("useA11yAnnouncer", () => {
     const user = userEvent.setup();
 
     render(
-      <A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
         <TestButton message="Hello World" priority="polite" />
-      </A11yAnnouncerProvider>
+      </LiveAnnouncerProvider>
     );
 
     await user.click(screen.getByText("Announce"));
 
-    const polite1 = screen.getByTestId("A11yAnnouncer-polite-1");
+    const polite1 = screen.getByTestId("LiveAnnouncer-polite-1");
     expect(polite1).toHaveTextContent("Hello World");
   });
 
@@ -140,14 +140,14 @@ describe("useA11yAnnouncer", () => {
     const user = userEvent.setup();
 
     render(
-      <A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
         <TestButton message="Alert!" priority="assertive" />
-      </A11yAnnouncerProvider>
+      </LiveAnnouncerProvider>
     );
 
     await user.click(screen.getByText("Announce"));
 
-    const assertive1 = screen.getByTestId("A11yAnnouncer-assertive-1");
+    const assertive1 = screen.getByTestId("LiveAnnouncer-assertive-1");
     expect(assertive1).toHaveTextContent("Alert!");
   });
 
@@ -155,161 +155,161 @@ describe("useA11yAnnouncer", () => {
     const user = userEvent.setup();
 
     render(
-      <A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
         <TestPoliteButton message="Message 1" />
-      </A11yAnnouncerProvider>
+      </LiveAnnouncerProvider>
     );
 
     const button = screen.getByText("Announce Polite");
 
     // First click - should use region 1
     await user.click(button);
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("Message 1");
-    expect(screen.getByTestId("A11yAnnouncer-polite-2")).toHaveTextContent("");
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("Message 1");
+    expect(screen.getByTestId("LiveAnnouncer-polite-2")).toHaveTextContent("");
   });
 
   it("uses announcePolite helper", async () => {
     const user = userEvent.setup();
 
     render(
-      <A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
         <TestPoliteButton message="Polite message" />
-      </A11yAnnouncerProvider>
+      </LiveAnnouncerProvider>
     );
 
     await user.click(screen.getByText("Announce Polite"));
 
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("Polite message");
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("Polite message");
   });
 
   it("uses announceAssertive helper", async () => {
     const user = userEvent.setup();
 
     render(
-      <A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
         <TestAssertiveButton message="Assertive message" />
-      </A11yAnnouncerProvider>
+      </LiveAnnouncerProvider>
     );
 
     await user.click(screen.getByText("Announce Assertive"));
 
-    expect(screen.getByTestId("A11yAnnouncer-assertive-1")).toHaveTextContent("Assertive message");
+    expect(screen.getByTestId("LiveAnnouncer-assertive-1")).toHaveTextContent("Assertive message");
   });
 
   it("clears all announcements", async () => {
     const user = userEvent.setup();
 
     render(
-      <A11yAnnouncerProvider clearOnUnmountDelay={0}>
+      <LiveAnnouncerProvider clearOnUnmountDelay={0}>
         <TestPoliteButton message="Test" />
         <TestClearButton />
-      </A11yAnnouncerProvider>
+      </LiveAnnouncerProvider>
     );
 
     await user.click(screen.getByText("Announce Polite"));
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("Test");
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("Test");
 
     await user.click(screen.getByText("Clear"));
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("");
-    expect(screen.getByTestId("A11yAnnouncer-polite-2")).toHaveTextContent("");
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("");
+    expect(screen.getByTestId("LiveAnnouncer-polite-2")).toHaveTextContent("");
   });
 });
 
-describe("A11yAnnouncerMessage", () => {
+describe("LiveAnnouncerMessage", () => {
   it("announces message on mount", () => {
     render(
-      <A11yAnnouncerProvider>
-        <A11yAnnouncerMessage message="Initial message" />
-      </A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
+        <LiveAnnouncerMessage message="Initial message" />
+      </LiveAnnouncerProvider>
     );
 
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("Initial message");
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("Initial message");
   });
 
   it("announces when message changes", () => {
     const { rerender } = render(
-      <A11yAnnouncerProvider>
-        <A11yAnnouncerMessage message="First" />
-      </A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
+        <LiveAnnouncerMessage message="First" />
+      </LiveAnnouncerProvider>
     );
 
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("First");
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("First");
 
     rerender(
-      <A11yAnnouncerProvider>
-        <A11yAnnouncerMessage message="Second" />
-      </A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
+        <LiveAnnouncerMessage message="Second" />
+      </LiveAnnouncerProvider>
     );
 
     // Due to double announcer, second message goes to region 2
-    expect(screen.getByTestId("A11yAnnouncer-polite-2")).toHaveTextContent("Second");
+    expect(screen.getByTestId("LiveAnnouncer-polite-2")).toHaveTextContent("Second");
   });
 
   it("uses assertive priority when specified", () => {
     render(
-      <A11yAnnouncerProvider>
-        <A11yAnnouncerMessage message="Alert!" priority="assertive" />
-      </A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
+        <LiveAnnouncerMessage message="Alert!" priority="assertive" />
+      </LiveAnnouncerProvider>
     );
 
-    expect(screen.getByTestId("A11yAnnouncer-assertive-1")).toHaveTextContent("Alert!");
+    expect(screen.getByTestId("LiveAnnouncer-assertive-1")).toHaveTextContent("Alert!");
   });
 
   it("does not render any visible content", () => {
     const { container } = render(
-      <A11yAnnouncerProvider>
-        <A11yAnnouncerMessage message="Hidden" />
-      </A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
+        <LiveAnnouncerMessage message="Hidden" />
+      </LiveAnnouncerProvider>
     );
 
     // The component returns null, so it doesn't add visible elements
-    expect(container.querySelector("[data-testid='A11yAnnouncer-message']")).not.toBeInTheDocument();
+    expect(container.querySelector("[data-testid='LiveAnnouncer-message']")).not.toBeInTheDocument();
   });
 
   it("clears announcements on unmount when clearOnUnmount is true", async () => {
     const TestComponent: React.FC<{ show: boolean }> = ({ show }) => (
-      <A11yAnnouncerProvider clearOnUnmountDelay={0}>
-        {show && <A11yAnnouncerMessage message="Temporary" clearOnUnmount />}
-      </A11yAnnouncerProvider>
+      <LiveAnnouncerProvider clearOnUnmountDelay={0}>
+        {show && <LiveAnnouncerMessage message="Temporary" clearOnUnmount />}
+      </LiveAnnouncerProvider>
     );
 
     const { rerender } = render(<TestComponent show={true} />);
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("Temporary");
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("Temporary");
 
     rerender(<TestComponent show={false} />);
 
     await waitFor(() => {
-      expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("");
+      expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("");
     });
   });
 
   it("re-announces same message when id changes", () => {
     const { rerender } = render(
-      <A11yAnnouncerProvider>
-        <A11yAnnouncerMessage message="Same message" id="1" />
-      </A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
+        <LiveAnnouncerMessage message="Same message" id="1" />
+      </LiveAnnouncerProvider>
     );
 
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("Same message");
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("Same message");
 
     rerender(
-      <A11yAnnouncerProvider>
-        <A11yAnnouncerMessage message="Same message" id="2" />
-      </A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
+        <LiveAnnouncerMessage message="Same message" id="2" />
+      </LiveAnnouncerProvider>
     );
 
     // Should use region 2 for the re-announcement
-    expect(screen.getByTestId("A11yAnnouncer-polite-2")).toHaveTextContent("Same message");
+    expect(screen.getByTestId("LiveAnnouncer-polite-2")).toHaveTextContent("Same message");
   });
 });
 
-describe("A11yAnnouncerMessenger", () => {
+describe("LiveAnnouncerMessenger", () => {
   it("provides announcer functions via render props", async () => {
     const user = userEvent.setup();
 
     render(
-      <A11yAnnouncerProvider>
-        <A11yAnnouncerMessenger>
+      <LiveAnnouncerProvider>
+        <LiveAnnouncerMessenger>
           {({ announcePolite, announceAssertive }) => (
             <>
               <button onClick={() => announcePolite("Polite via render")}>
@@ -320,38 +320,38 @@ describe("A11yAnnouncerMessenger", () => {
               </button>
             </>
           )}
-        </A11yAnnouncerMessenger>
-      </A11yAnnouncerProvider>
+        </LiveAnnouncerMessenger>
+      </LiveAnnouncerProvider>
     );
 
     await user.click(screen.getByText("Polite"));
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("Polite via render");
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("Polite via render");
 
     await user.click(screen.getByText("Assertive"));
-    expect(screen.getByTestId("A11yAnnouncer-assertive-1")).toHaveTextContent("Assertive via render");
+    expect(screen.getByTestId("LiveAnnouncer-assertive-1")).toHaveTextContent("Assertive via render");
   });
 
   it("provides clearAnnouncements function", async () => {
     const user = userEvent.setup();
 
     render(
-      <A11yAnnouncerProvider clearOnUnmountDelay={0}>
-        <A11yAnnouncerMessenger>
+      <LiveAnnouncerProvider clearOnUnmountDelay={0}>
+        <LiveAnnouncerMessenger>
           {({ announcePolite, clearAnnouncements }) => (
             <>
               <button onClick={() => announcePolite("Test")}>Announce</button>
               <button onClick={clearAnnouncements}>Clear</button>
             </>
           )}
-        </A11yAnnouncerMessenger>
-      </A11yAnnouncerProvider>
+        </LiveAnnouncerMessenger>
+      </LiveAnnouncerProvider>
     );
 
     await user.click(screen.getByText("Announce"));
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("Test");
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("Test");
 
     await user.click(screen.getByText("Clear"));
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("");
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("");
   });
 });
 
@@ -366,34 +366,34 @@ describe("Auto-clear functionality", () => {
 
   it("clears announcements after specified delay", async () => {
     render(
-      <A11yAnnouncerProvider clearOnUnmountDelay={1000}>
-        <A11yAnnouncerMessage message="Auto-clear test" />
-      </A11yAnnouncerProvider>
+      <LiveAnnouncerProvider clearOnUnmountDelay={1000}>
+        <LiveAnnouncerMessage message="Auto-clear test" />
+      </LiveAnnouncerProvider>
     );
 
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("Auto-clear test");
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("Auto-clear test");
 
     act(() => {
       jest.advanceTimersByTime(1000);
     });
 
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("");
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("");
   });
 
   it("does not auto-clear when delay is 0", async () => {
     render(
-      <A11yAnnouncerProvider clearOnUnmountDelay={0}>
-        <A11yAnnouncerMessage message="No auto-clear" />
-      </A11yAnnouncerProvider>
+      <LiveAnnouncerProvider clearOnUnmountDelay={0}>
+        <LiveAnnouncerMessage message="No auto-clear" />
+      </LiveAnnouncerProvider>
     );
 
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("No auto-clear");
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("No auto-clear");
 
     act(() => {
       jest.advanceTimersByTime(10000);
     });
 
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("No auto-clear");
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("No auto-clear");
   });
 });
 
@@ -403,7 +403,7 @@ describe("Integration tests", () => {
     let counter = 0;
 
     const RapidAnnouncer: React.FC = () => {
-      const { announcePolite } = useA11yAnnouncer();
+      const { announcePolite } = useLiveAnnouncer();
       return (
         <button onClick={() => announcePolite(`Message ${++counter}`, String(counter))}>
           Rapid
@@ -412,9 +412,9 @@ describe("Integration tests", () => {
     };
 
     render(
-      <A11yAnnouncerProvider clearOnUnmountDelay={0}>
+      <LiveAnnouncerProvider clearOnUnmountDelay={0}>
         <RapidAnnouncer />
-      </A11yAnnouncerProvider>
+      </LiveAnnouncerProvider>
     );
 
     const button = screen.getByText("Rapid");
@@ -424,8 +424,8 @@ describe("Integration tests", () => {
     await user.click(button);
 
     // The last message should be visible in one of the regions
-    const polite1 = screen.getByTestId("A11yAnnouncer-polite-1");
-    const polite2 = screen.getByTestId("A11yAnnouncer-polite-2");
+    const polite1 = screen.getByTestId("LiveAnnouncer-polite-1");
+    const polite2 = screen.getByTestId("LiveAnnouncer-polite-2");
 
     const hasMessage = 
       polite1.textContent?.includes("Message") || 
@@ -436,7 +436,7 @@ describe("Integration tests", () => {
 
   it("works with useEffect announcements", () => {
     const EffectAnnouncer: React.FC<{ message: string }> = ({ message }) => {
-      const { announcePolite } = useA11yAnnouncer();
+      const { announcePolite } = useLiveAnnouncer();
 
       useEffect(() => {
         announcePolite(message);
@@ -446,12 +446,12 @@ describe("Integration tests", () => {
     };
 
     render(
-      <A11yAnnouncerProvider>
+      <LiveAnnouncerProvider>
         <EffectAnnouncer message="Effect message" />
-      </A11yAnnouncerProvider>
+      </LiveAnnouncerProvider>
     );
 
-    expect(screen.getByTestId("A11yAnnouncer-polite-1")).toHaveTextContent("Effect message");
+    expect(screen.getByTestId("LiveAnnouncer-polite-1")).toHaveTextContent("Effect message");
   });
 });
 

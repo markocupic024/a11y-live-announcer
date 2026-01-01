@@ -1,4 +1,4 @@
-# A11yAnnouncer
+# a11y-live-announcer
 
 A lightweight React library for managing ARIA live regions for reliable screen reader notifications.
 
@@ -15,27 +15,27 @@ ARIA Live Regions are used to communicate important information to screen reader
 ## Installation
 
 ```bash
-npm install a11yAnnouncer
+npm install a11y-live-announcer
 ```
 
 or
 
 ```bash
-yarn add a11yAnnouncer
+yarn add a11y-live-announcer
 ```
 
 ## Quick Start
 
-Wrap your app with `A11yAnnouncerProvider`:
+Wrap your app with `LiveAnnouncerProvider`:
 
 ```tsx
-import { A11yAnnouncerProvider } from 'a11yAnnouncer';
+import { LiveAnnouncerProvider } from 'a11y-live-announcer';
 
 function App() {
   return (
-    <A11yAnnouncerProvider>
+    <LiveAnnouncerProvider>
       <YourApp />
-    </A11yAnnouncerProvider>
+    </LiveAnnouncerProvider>
   );
 }
 ```
@@ -43,10 +43,10 @@ function App() {
 Then announce messages from anywhere in your app:
 
 ```tsx
-import { useA11yAnnouncer } from 'a11yAnnouncer';
+import { useLiveAnnouncer } from 'a11y-live-announcer';
 
 function MyComponent() {
-  const { announcePolite, announceAssertive } = useA11yAnnouncer();
+  const { announcePolite, announceAssertive } = useLiveAnnouncer();
 
   const handleSave = async () => {
     await saveData();
@@ -65,19 +65,19 @@ function MyComponent() {
 
 ## API Reference
 
-### `A11yAnnouncerProvider`
+### `LiveAnnouncerProvider`
 
 The context provider that renders the hidden ARIA live regions.
 
 ```tsx
-<A11yAnnouncerProvider
+<LiveAnnouncerProvider
   clearOnUnmountDelay={7000} // Optional: auto-clear delay in ms (default: 7000, 0 to disable)
 >
   {children}
-</A11yAnnouncerProvider>
+</LiveAnnouncerProvider>
 ```
 
-### `useA11yAnnouncer` Hook
+### `useLiveAnnouncer` Hook
 
 The primary way to announce messages.
 
@@ -87,13 +87,13 @@ const {
   announcePolite,     // (message, id?) => void
   announceAssertive,  // (message, id?) => void
   clearAnnouncements, // () => void
-} = useA11yAnnouncer();
+} = useLiveAnnouncer();
 ```
 
 #### Options
 
 ```tsx
-interface A11yAnnouncerOptions {
+interface LiveAnnouncerOptions {
   priority?: 'polite' | 'assertive';  // Default: 'polite'
   id?: string;  // Force re-announcement of same message
 }
@@ -115,16 +115,16 @@ announcePolite('Form submitted', `submission-${Date.now()}`);
 announce('Loading complete', { priority: 'polite' });
 ```
 
-### `A11yAnnouncerMessage` Component
+### `LiveAnnouncerMessage` Component
 
 Declarative component for announcements. Announces when the `message` prop changes.
 
 ```tsx
-import { A11yAnnouncerMessage } from 'A11yAnnouncer';
+import { LiveAnnouncerMessage } from 'a11y-live-announcer';
 
 function StatusMessage({ status }) {
   return (
-    <A11yAnnouncerMessage
+    <LiveAnnouncerMessage
       message={status}
       priority="polite"     // Optional: 'polite' | 'assertive'
       id={statusId}         // Optional: force re-announcement
@@ -134,22 +134,22 @@ function StatusMessage({ status }) {
 }
 ```
 
-### `A11yAnnouncerMessenger` Component
+### `LiveAnnouncerMessenger` Component
 
 Render props pattern for when you can't use hooks directly.
 
 ```tsx
-import { A11yAnnouncerMessenger } from 'A11yAnnouncer';
+import { LiveAnnouncerMessenger } from 'a11y-live-announcer';
 
 function ClassComponent() {
   return (
-    <A11yAnnouncerMessenger>
+    <LiveAnnouncerMessenger>
       {({ announcePolite, announceAssertive, clearAnnouncements }) => (
         <button onClick={() => announcePolite('Clicked!')}>
           Click me
         </button>
       )}
-    </A11yAnnouncerMessenger>
+    </LiveAnnouncerMessenger>
   );
 }
 ```
@@ -160,7 +160,7 @@ function ClassComponent() {
 
 ```tsx
 function useRouteAnnouncer() {
-  const { announcePolite } = useA11yAnnouncer();
+  const { announcePolite } = useLiveAnnouncer();
   const location = useLocation();
 
   useEffect(() => {
@@ -173,7 +173,7 @@ function useRouteAnnouncer() {
 
 ```tsx
 function FormField({ error }) {
-  const { announceAssertive } = useA11yAnnouncer();
+  const { announceAssertive } = useLiveAnnouncer();
 
   useEffect(() => {
     if (error) {
@@ -189,7 +189,7 @@ function FormField({ error }) {
 
 ```tsx
 function DataLoader() {
-  const { announcePolite } = useA11yAnnouncer();
+  const { announcePolite } = useLiveAnnouncer();
   const [isLoading, setIsLoading] = useState(false);
 
   const loadData = async () => {
@@ -216,7 +216,7 @@ function DataLoader() {
 function Toast({ message, type }) {
   return (
     <>
-      <A11yAnnouncerMessage
+      <LiveAnnouncerMessage
         message={message}
         priority={type === 'error' ? 'assertive' : 'polite'}
         clearOnUnmount

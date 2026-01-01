@@ -1,13 +1,13 @@
 import { useState, useCallback } from 'react'
 import {
-  A11yAnnouncerProvider,
-  useA11yAnnouncer,
-  A11yAnnouncerMessage,
-  A11yAnnouncerMessenger,
-} from 'a11yAnnouncer'
+  LiveAnnouncerProvider,
+  useLiveAnnouncer,
+  LiveAnnouncerMessage,
+  LiveAnnouncerMessenger,
+} from 'a11y-live-announcer'
 
 function HookDemo() {
-  const { announcePolite, announceAssertive, clearAnnouncements } = useA11yAnnouncer()
+  const { announcePolite, announceAssertive, clearAnnouncements } = useLiveAnnouncer()
   const [counter, setCounter] = useState(0)
 
   const handlePolite = () => {
@@ -29,7 +29,7 @@ function HookDemo() {
     <div className="demo-section">
       <h2>Hook API</h2>
       <p className="description">
-        Use the <code>useA11yAnnouncer</code> hook for imperative announcements.
+        Use the <code>useLiveAnnouncer</code> hook for imperative announcements.
       </p>
       <div className="button-group">
         <button className="btn btn-polite" onClick={handlePolite}>
@@ -61,7 +61,7 @@ function MessageComponentDemo() {
     <div className="demo-section">
       <h2>Declarative Component</h2>
       <p className="description">
-        Use <code>&lt;A11yAnnouncerMessage&gt;</code> for declarative announcements.
+        Use <code>&lt;LiveAnnouncerMessage&gt;</code> for declarative announcements.
       </p>
       
       <div className="input-group">
@@ -94,7 +94,7 @@ function MessageComponentDemo() {
       </div>
 
       {showMessage && (
-        <A11yAnnouncerMessage 
+        <LiveAnnouncerMessage 
           message={message} 
           priority={priority}
           clearOnUnmount
@@ -113,10 +113,10 @@ function MessengerDemo() {
     <div className="demo-section">
       <h2>Render Props</h2>
       <p className="description">
-        Use <code>&lt;A11yAnnouncerMessenger&gt;</code> for render props pattern.
+        Use <code>&lt;LiveAnnouncerMessenger&gt;</code> for render props pattern.
       </p>
       
-      <A11yAnnouncerMessenger>
+      <LiveAnnouncerMessenger>
         {({ announcePolite, announceAssertive }) => (
           <div className="button-group">
             <button 
@@ -133,13 +133,13 @@ function MessengerDemo() {
             </button>
           </div>
         )}
-      </A11yAnnouncerMessenger>
+      </LiveAnnouncerMessenger>
     </div>
   )
 }
 
 function RouteChangeDemo() {
-  const { announcePolite } = useA11yAnnouncer()
+  const { announcePolite } = useLiveAnnouncer()
   const [currentPage, setCurrentPage] = useState('Home')
 
   const navigateTo = (page: string) => {
@@ -174,7 +174,7 @@ function RouteChangeDemo() {
 }
 
 function LoadingStateDemo() {
-  const { announcePolite, announceAssertive } = useA11yAnnouncer()
+  const { announcePolite, announceAssertive } = useLiveAnnouncer()
   const [isLoading, setIsLoading] = useState(false)
   const [hasError, setHasError] = useState(false)
 
@@ -233,10 +233,10 @@ function LiveRegionVisualizer() {
   // Poll the DOM for live region contents
   useState(() => {
     const interval = setInterval(() => {
-      const p1 = document.querySelector('[data-testid="A11yAnnouncer-polite-1"]')
-      const p2 = document.querySelector('[data-testid="A11yAnnouncer-polite-2"]')
-      const a1 = document.querySelector('[data-testid="A11yAnnouncer-assertive-1"]')
-      const a2 = document.querySelector('[data-testid="A11yAnnouncer-assertive-2"]')
+      const p1 = document.querySelector('[data-testid="LiveAnnouncer-polite-1"]')
+      const p2 = document.querySelector('[data-testid="LiveAnnouncer-polite-2"]')
+      const a1 = document.querySelector('[data-testid="LiveAnnouncer-assertive-1"]')
+      const a2 = document.querySelector('[data-testid="LiveAnnouncer-assertive-2"]')
       
       setPolite1(p1?.textContent || '')
       setPolite2(p2?.textContent || '')
@@ -283,7 +283,7 @@ function LiveRegionVisualizer() {
 
 export default function App() {
   return (
-    <A11yAnnouncerProvider clearOnUnmountDelay={7000}>
+    <LiveAnnouncerProvider clearOnUnmountDelay={7000}>
       <div className="app">
         <header className="header">
           <h1>
@@ -303,7 +303,7 @@ export default function App() {
           <LoadingStateDemo />
         </main>
       </div>
-    </A11yAnnouncerProvider>
+    </LiveAnnouncerProvider>
   )
 }
 

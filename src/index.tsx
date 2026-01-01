@@ -8,15 +8,15 @@ import React, {
   ReactNode,
 } from "react";
 
-export type A11yAnnouncerPriority = "polite" | "assertive";
+export type LiveAnnouncerPriority = "polite" | "assertive";
 
-export interface A11yAnnouncerOptions {
-  priority?: A11yAnnouncerPriority;
+export interface LiveAnnouncerOptions {
+  priority?: LiveAnnouncerPriority;
   id?: string;
 }
 
-export interface A11yAnnouncerContextValue {
-  announce: (message: string, options?: A11yAnnouncerOptions) => void;
+export interface LiveAnnouncerContextValue {
+  announce: (message: string, options?: LiveAnnouncerOptions) => void;
   announcePolite: (message: string, id?: string) => void;
   announceAssertive: (message: string, id?: string) => void;
   clearAnnouncements: () => void;
@@ -39,7 +39,7 @@ const visuallyHiddenStyle: React.CSSProperties = {
   border: 0,
 };
 
-const A11yAnnouncerContext = createContext<A11yAnnouncerContextValue | null>(
+const LiveAnnouncerContext = createContext<LiveAnnouncerContextValue | null>(
   null
 );
 
@@ -57,12 +57,12 @@ const DoubleAnnouncer: React.FC<DoubleAnnouncerProps> = ({
   assertive2,
 }) => {
   return (
-    <div style={visuallyHiddenStyle} data-testid="A11yAnnouncer-container">
+    <div style={visuallyHiddenStyle} data-testid="LiveAnnouncer-container">
       <div
         role="status"
         aria-live="polite"
         aria-atomic="true"
-        data-testid="A11yAnnouncer-polite-1"
+        data-testid="LiveAnnouncer-polite-1"
       >
         {polite1}
       </div>
@@ -70,7 +70,7 @@ const DoubleAnnouncer: React.FC<DoubleAnnouncerProps> = ({
         role="status"
         aria-live="polite"
         aria-atomic="true"
-        data-testid="A11yAnnouncer-polite-2"
+        data-testid="LiveAnnouncer-polite-2"
       >
         {polite2}
       </div>
@@ -78,7 +78,7 @@ const DoubleAnnouncer: React.FC<DoubleAnnouncerProps> = ({
         role="alert"
         aria-live="assertive"
         aria-atomic="true"
-        data-testid="A11yAnnouncer-assertive-1"
+        data-testid="LiveAnnouncer-assertive-1"
       >
         {assertive1}
       </div>
@@ -86,7 +86,7 @@ const DoubleAnnouncer: React.FC<DoubleAnnouncerProps> = ({
         role="alert"
         aria-live="assertive"
         aria-atomic="true"
-        data-testid="A11yAnnouncer-assertive-2"
+        data-testid="LiveAnnouncer-assertive-2"
       >
         {assertive2}
       </div>
@@ -94,12 +94,12 @@ const DoubleAnnouncer: React.FC<DoubleAnnouncerProps> = ({
   );
 };
 
-export interface A11yAnnouncerProviderProps {
+export interface LiveAnnouncerProviderProps {
   children: ReactNode;
   clearOnUnmountDelay?: number;
 }
 
-export const A11yAnnouncerProvider: React.FC<A11yAnnouncerProviderProps> = ({
+export const LiveAnnouncerProvider: React.FC<LiveAnnouncerProviderProps> = ({
   children,
   clearOnUnmountDelay = 7000,
 }) => {
@@ -130,7 +130,7 @@ export const A11yAnnouncerProvider: React.FC<A11yAnnouncerProviderProps> = ({
   }, []);
 
   const announce = useCallback(
-    (message: string, options: A11yAnnouncerOptions = {}) => {
+    (message: string, options: LiveAnnouncerOptions = {}) => {
       const { priority = "polite", id } = options;
       const announcementId = id || generateId();
 
@@ -204,7 +204,7 @@ export const A11yAnnouncerProvider: React.FC<A11yAnnouncerProviderProps> = ({
     };
   }, []);
 
-  const contextValue: A11yAnnouncerContextValue = {
+  const contextValue: LiveAnnouncerContextValue = {
     announce,
     announcePolite,
     announceAssertive,
@@ -212,7 +212,7 @@ export const A11yAnnouncerProvider: React.FC<A11yAnnouncerProviderProps> = ({
   };
 
   return (
-    <A11yAnnouncerContext.Provider value={contextValue}>
+    <LiveAnnouncerContext.Provider value={contextValue}>
       {children}
       <DoubleAnnouncer
         polite1={polite1}
@@ -220,36 +220,36 @@ export const A11yAnnouncerProvider: React.FC<A11yAnnouncerProviderProps> = ({
         assertive1={assertive1}
         assertive2={assertive2}
       />
-    </A11yAnnouncerContext.Provider>
+    </LiveAnnouncerContext.Provider>
   );
 };
 
-export const useA11yAnnouncer = (): A11yAnnouncerContextValue => {
-  const context = useContext(A11yAnnouncerContext);
+export const useLiveAnnouncer = (): LiveAnnouncerContextValue => {
+  const context = useContext(LiveAnnouncerContext);
 
   if (!context) {
     throw new Error(
-      "useA11yAnnouncer must be used within an A11yAnnouncerProvider"
+      "useLiveAnnouncer must be used within a LiveAnnouncerProvider"
     );
   }
 
   return context;
 };
 
-export interface A11yAnnouncerMessageProps {
+export interface LiveAnnouncerMessageProps {
   message: string;
-  priority?: A11yAnnouncerPriority;
+  priority?: LiveAnnouncerPriority;
   id?: string;
   clearOnUnmount?: boolean;
 }
 
-export const A11yAnnouncerMessage: React.FC<A11yAnnouncerMessageProps> = ({
+export const LiveAnnouncerMessage: React.FC<LiveAnnouncerMessageProps> = ({
   message,
   priority = "polite",
   id,
   clearOnUnmount = false,
 }) => {
-  const { announce, clearAnnouncements } = useA11yAnnouncer();
+  const { announce, clearAnnouncements } = useLiveAnnouncer();
   const previousMessageRef = useRef<string>("");
   const previousIdRef = useRef<string | undefined>(undefined);
 
@@ -272,23 +272,23 @@ export const A11yAnnouncerMessage: React.FC<A11yAnnouncerMessageProps> = ({
   return null;
 };
 
-export interface A11yAnnouncerMessengerProps {
-  children: (context: A11yAnnouncerContextValue) => ReactNode;
+export interface LiveAnnouncerMessengerProps {
+  children: (context: LiveAnnouncerContextValue) => ReactNode;
 }
 
-export const A11yAnnouncerMessenger: React.FC<A11yAnnouncerMessengerProps> = ({
+export const LiveAnnouncerMessenger: React.FC<LiveAnnouncerMessengerProps> = ({
   children,
 }) => {
-  const context = useA11yAnnouncer();
+  const context = useLiveAnnouncer();
   return <>{children(context)}</>;
 };
 
-export { A11yAnnouncerContext };
+export { LiveAnnouncerContext };
 
 export default {
-  A11yAnnouncerProvider,
-  useA11yAnnouncer,
-  A11yAnnouncerMessage,
-  A11yAnnouncerMessenger,
-  A11yAnnouncerContext,
+  LiveAnnouncerProvider,
+  useLiveAnnouncer,
+  LiveAnnouncerMessage,
+  LiveAnnouncerMessenger,
+  LiveAnnouncerContext,
 };

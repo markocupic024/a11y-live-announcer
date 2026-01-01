@@ -11,7 +11,7 @@
   "dependencies": {
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "a11yAnnouncer": "file:.."
+    "a11y-live-announcer": "file:.."
   },
   "devDependencies": {
     "@types/react": "^19.2.7",

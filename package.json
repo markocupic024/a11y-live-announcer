@@ -1,5 +1,5 @@
 {
-  "name": "a11yAnnouncer",
+  "name": "a11y-live-announcer",
   "version": "1.0.0",
   "type": "module",
   "description": "React ARIA live region announcer for reliable screen reader notifications",
@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/markocupic024/a11yAnnouncer.git"
+    "url": "git+https://github.com/markocupic024/a11y-live-announcer.git"
   },
   "keywords": [
     "react",
