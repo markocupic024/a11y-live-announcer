@@ -236,6 +236,10 @@ Try the interactive demo to see the library in action:
 
 The demo showcases all features including hooks, declarative components, render props, and common use cases.
 
+## Testing
+
+This library automatically detects test environments and **does not render live region DOM elements** when running in tests. This keeps your snapshots clean and prevents the announcer markup from cluttering test output.
+
 ## Requirements
 
 - React 16.8+ (hooks support)

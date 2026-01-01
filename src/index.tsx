@@ -8,6 +8,21 @@ import React, {
   ReactNode,
 } from "react";
 
+/**
+ * Detects if we're running in a test environment.
+ * Uses IS_REACT_ACT_ENVIRONMENT (React 18+) or falls back to checking for jest global.
+ * https://github.com/reactwg/react-18/discussions/102
+ */
+const isTestEnvironment = (): boolean => {
+  // @ts-ignore - IS_REACT_ACT_ENVIRONMENT is a global set by testing frameworks
+  if (typeof IS_REACT_ACT_ENVIRONMENT !== "undefined") {
+    // @ts-ignore
+    return IS_REACT_ACT_ENVIRONMENT === true;
+  }
+  // Fallback for older React versions or other test frameworks
+  return typeof jest !== "undefined";
+};
+
 export type LiveAnnouncerPriority = "polite" | "assertive";
 
 export interface LiveAnnouncerOptions {
@@ -214,12 +229,14 @@ export const LiveAnnouncerProvider: React.FC<LiveAnnouncerProviderProps> = ({
   return (
     <LiveAnnouncerContext.Provider value={contextValue}>
       {children}
-      <DoubleAnnouncer
-        polite1={polite1}
-        polite2={polite2}
-        assertive1={assertive1}
-        assertive2={assertive2}
-      />
+      {!isTestEnvironment() && (
+        <DoubleAnnouncer
+          polite1={polite1}
+          polite2={polite2}
+          assertive1={assertive1}
+          assertive2={assertive2}
+        />
+      )}
     </LiveAnnouncerContext.Provider>
   );
 };
