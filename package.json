@@ -19,7 +19,9 @@
     "lint": "tsc --noEmit",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build",
-    "demo": "cd demo && npm run dev"
+    "demo": "cd demo && npm run dev",
+    "demo:build": "cd demo && npm run build",
+    "demo:preview": "cd demo && npm run preview"
   },
   "repository": {
     "type": "git",

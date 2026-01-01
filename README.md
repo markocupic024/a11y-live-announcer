@@ -227,6 +227,15 @@ function Toast({ message, type }) {
 }
 ```
 
+## Demo
+
+Try the interactive demo to see the library in action:
+
+- **Live Demo**: [View on GitHub Pages](https://markocupic024.github.io/a11y-live-announcer/) (auto-deployed)
+- **Local Demo**: Run `npm run demo` from the project root
+
+The demo showcases all features including hooks, declarative components, render props, and common use cases.
+
 ## Requirements
 
 - React 16.8+ (hooks support)
