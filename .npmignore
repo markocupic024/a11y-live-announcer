@@ -1,0 +1,45 @@
+# Source files
+src/
+*.tsx
+*.ts
+!dist/**/*.d.ts
+
+# Config files
+tsconfig.json
+tsconfig.test.json
+rollup.config.js
+jest.config.js
+jest.setup.js
+.eslintrc*
+.prettierrc*
+.editorconfig
+
+# Test files
+__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+coverage/
+
+# Demo
+demo/
+
+# Development
+node_modules/
+.git/
+.gitignore
+.vscode/
+.idea/
+
+# Build artifacts
+*.log
+*.tgz
+
+# Documentation (include README)
+CONTRIBUTING.md
+CHANGELOG.md
+
+# OS files
+.DS_Store
+Thumbs.db
