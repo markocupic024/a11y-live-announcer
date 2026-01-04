@@ -231,7 +231,7 @@ function Toast({ message, type }) {
 
 Try the interactive demo to see the library in action:
 
-- **Live Demo**: [View on GitHub Pages](https://markocupic024.github.io/a11y-live-announcer/) (auto-deployed)
+- **Live Demo**: [View on GitHub Pages](https://markocupic024.github.io/a11y-live-announcer/)
 - **Local Demo**: Run `npm run demo` from the project root
 
 The demo showcases all features including hooks, declarative components, render props, and common use cases.
