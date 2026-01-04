@@ -1,16 +1,8 @@
 # a11y-live-announcer
 
-A lightweight React library for managing ARIA live regions for reliable screen reader notifications.
+A lightweight React library for managing ARIA live regions for screen reader notifications.
 
 [![npm](https://img.shields.io/npm/v/a11y-live-announcer.svg)](https://www.npmjs.com/package/a11y-live-announcer) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-## Why Use This?
-
-ARIA Live Regions are used to communicate important information to screen reader users. However, screen readers can be finicky about detecting changes to live regions, especially when:
-
-- The same message is announced twice in a row
-- Messages change too rapidly
-- The live region content is updated in a non-standard way
 
 ## Installation
 

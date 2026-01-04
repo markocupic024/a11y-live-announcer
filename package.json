@@ -1,8 +1,8 @@
 {
   "name": "a11y-live-announcer",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
-  "description": "React ARIA live region announcer for reliable screen reader notifications",
+  "description": "React ARIA live region announcer for screen reader notifications",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
